@@ -37,10 +37,11 @@
     transition: background-color 1s ease, color 1s ease;
     overflow-x: hidden;
     position: relative;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   body {
     padding: 0 1rem;
-    overflow: hidden;
   }
   .logo {
     width: 200px;
@@ -48,6 +49,7 @@
     transition: opacity 1s ease, transform 1s ease;
     position: relative;
     z-index: 10;
+    max-width: 100%;
   }
   h1 {
     font-size: clamp(1.0rem, 5vw, 2.0rem);
@@ -55,13 +57,16 @@
     transition: opacity 1s ease, transform 1s ease;
     position: relative;
     z-index: 10;
+    max-width: 100%;
   }
-  #timeRemaining {
+  #timeRemaining,
+  #secondsRemaining {
     font-weight: 600;
     font-size: 1.5rem;
     margin-bottom: 20px;
     position: relative;
     z-index: 10;
+    max-width: 100%;
   }
   #progressContainer {
     width: 300px;
@@ -73,6 +78,7 @@
     transition: background-color 1s ease;
     position: relative;
     z-index: 10;
+    max-width: 100%;
   }
   [data-theme="dark"] #progressContainer {
     background: var(--progress-bg-dark);
@@ -82,14 +88,6 @@
     width: 100%;
     background: var(--progress-fill);
     transition: width 0.2s linear;
-  }
-  #secondsRemaining {
-    font-weight: 700;
-    font-size: 1.2rem;
-    user-select: none;
-    margin-bottom: 30px;
-    position: relative;
-    z-index: 10;
   }
   .footer {
     position: fixed;
@@ -117,7 +115,8 @@
     height: 35px;
     background: transparent;
     border: none;
-    padding: 0;
+    padding: 10px;
+    touch-action: manipulation;
     outline: none;
     display: flex;
     align-items: center;
@@ -159,8 +158,6 @@
     0% { filter: drop-shadow(0 0 2px var(--moon-color)); }
     100% { filter: drop-shadow(0 0 7px var(--moon-color)); }
   }
-
-  /* Yıldızlar container */
   #stars {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -168,8 +165,6 @@
     overflow: hidden;
     z-index: 1;
   }
-
-  /* Yıldızlar için ortak stil */
   .star {
     position: absolute;
     border-radius: 50%;
@@ -178,79 +173,49 @@
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
   }
-
-  /* Açık tema için siyah yıldız */
   [data-theme="light"] .star {
     background-color: black;
     opacity: 0.15;
   }
-
-  /* Karanlık tema için beyaz yıldız */
   [data-theme="dark"] .star {
     background-color: white;
     opacity: 0.7;
   }
-
-  /* Yıldız animasyonu: hafif yer değiştirme + yanıp sönme */
   @keyframes twinkleMove {
     0%   { transform: translate(0, 0); opacity: 0.8; }
     50%  { transform: translate(2px, 2px); opacity: 0.3; }
     100% { transform: translate(0, 0); opacity: 0.8; }
   }
 
+  /* Mevcut küçük ekran düzeni */
   @media (max-width: 480px) {
-    .logo {
-      width: 110px;
-      margin-bottom: 35px;
-    }
-    h1 {
-      font-size: clamp(1.2rem, 7vw, 2rem);
-    }
-    #progressContainer {
-      width: 240px;
-      height: 20px;
-      margin-bottom: 6px;
-    }
-    #secondsRemaining {
-      font-size: 1rem;
-      margin-bottom: 20px;
-    }
-    #timeRemaining {
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
-    .theme-toggle-button {
-      width: 45px;
-      height: 45px;
-    }
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-    .footer {
-      bottom: 10px;
-      right: 10px;
-    }
+    .logo { width: 110px; margin-bottom: 35px; }
+    h1 { font-size: clamp(1.2rem, 7vw, 2rem); }
+    #progressContainer { width: 240px; margin-bottom: 6px; }
+    #secondsRemaining, #timeRemaining { font-size: 1rem; }
+    .theme-toggle-button { width: 80px; height: 45px; }
+    svg { width: 24px; height: 24px; }
+    .footer { bottom: 10px; right: 10px; }
+  }
+
+  /* Yeni eklenen orta boy ekranlar */
+  @media (max-width: 768px) {
+    .logo { width: 130px; }
+    h1 { font-size: clamp(1.1rem, 6vw, 1.8rem); }
+    #progressContainer { width: 220px; }
+    .footer { bottom: 10px; right: 10px; gap: 0px; }
   }
 </style>
 </head>
 <body>
   <div id="stars"></div>
-
-  <img
-    id="logo"
-    class="logo"
-    src="https://i.imgur.com/6OoYS9G.png"
-    alt="Xiaomi Logo"
-  />
+  <img id="logo" class="logo" src="https://i.imgur.com/6OoYS9G.png" alt="Xiaomi Logo" />
   <h1>Mi 11 Ultra Bootloader Unlock</h1>
-
   <div id="timeRemaining" aria-live="polite">Kalan süre: --</div>
   <div id="progressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60" aria-label="Bootloader unlock countdown progress">
     <div id="progressBar"></div>
   </div>
   <div id="secondsRemaining">60 saniye</div>
-
   <div class="footer">
     <button class="theme-toggle-button" aria-label="Toggle light/dark theme" id="themeToggleBtn" title="Tema değiştir">
       <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -272,7 +237,6 @@
     </button>
     <a class="link" href="https://t.me/jahnemec" target="_blank" rel="noopener noreferrer">@jahnemec</a>
   </div>
-
 <script>
   const progressBar = document.getElementById('progressBar');
   const progressContainer = document.getElementById('progressContainer');
@@ -355,12 +319,11 @@
     setTheme(newTheme);
   });
 
-  // Yıldız oluşturma
   function createStars(count) {
     for (let i = 0; i < count; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
-      const size = Math.random() * 2 + 1; // 1-3px arası boyut
+      const size = Math.random() * 2 + 1;
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       star.style.top = Math.random() * 100 + 'vh';
