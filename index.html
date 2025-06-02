@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mi 11 Ultra Bootloader Unlock</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-light: #fff;
+    --text-light: #000;
+    --bg-dark: #121212;
+    --text-dark: #fff;
+  }
+  [data-theme="light"] {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+  }
+  [data-theme="dark"] {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+  }
+  body {
+    font-family: 'Google Sans', sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: background-color 1s ease, color 1s ease;
+  }
+  .logo {
+    width: 140px;
+    margin-bottom: 50px;
+  }
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin: 0 0 20px 0;
+  }
+  #countdown {
+    font-weight: 700;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+  }
+  .footer {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .link {
+    font-weight: 700;
+    font-size: 1rem;
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  /* Single button toggle */
+  .theme-toggle-button {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 1.8;
+    stroke: currentColor;
+    fill: none;
+    transition: stroke 1s ease, fill 1s ease;
+  }
+  [data-theme="light"] svg {
+    color: #f39c12; /* güneş rengi turuncu */
+  }
+  [data-theme="dark"] svg {
+    color: #f1c40f; /* ay için daha açık sarı */
+  }
+</style>
+</head>
+<body>
+  <img
+    id="logo"
+    class="logo"
+    src="https://i.imgur.com/6OoYS9G.png"
+    alt="Xiaomi Logo"
+  />
+  <h1>Mi 11 Ultra Bootloader Unlock</h1>
+  <div id="countdown">Yükleniyor...</div>
+  <div class="footer">
+    <button class="theme-toggle-button" aria-label="Toggle light/dark theme" id="themeToggleBtn" title="Tema değiştir">
+      <!-- Güneş ve Ay ikonları inline, hangisi görünür JavaScript ile ayarlanacak -->
+      <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="5" fill="#f39c12"/>
+        <g stroke="#f39c12" stroke-linecap="round">
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </g>
+      </svg>
+      <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" style="display:none; stroke:#f1c40f; fill:#f1c40f;">
+        <path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z"/>
+      </svg>
+    </button>
+    <a class="link" href="https://t.me/jahnemec" target="_blank" rel="noopener noreferrer">@jahnemec</a>
+  </div>
+  <script>
+    const countdownEl = document.getElementById('countdown');
+    const targetDate = new Date('2025-06-04T23:00:00').getTime();
+    const html = document.documentElement;
+    const logo = document.getElementById('logo');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        countdownEl.textContent = 'Zaman geldi!';
+        clearInterval(interval);
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownEl.textContent = `${days}g ${hours}sa ${minutes}dk ${seconds}sn`;
+    }
+
+    let interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        logo.src = 'https://i.imgur.com/0JCyOT5.png';
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline';
+      } else {
+        logo.src = 'https://i.imgur.com/6OoYS9G.png';
+        sunIcon.style.display = 'inline';
+        moonIcon.style.display = 'none';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      setTheme('light');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  </script>
+</body>
+</html>
