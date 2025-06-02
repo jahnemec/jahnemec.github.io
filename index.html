@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="tr" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Mi 11 Ultra Bootloader Unlock</title>
-<!-- Google Sans font -->
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg-light: #fff;
     --text-light: #000;
-    --bg-dark: #000000; /* tam siyah */
+    --bg-dark: #000;
     --text-dark: #fff;
+    --sun-color: #f1a740;
+    --moon-color: #f1c40f;
+    --progress-bg-light: #666666;
+    --progress-bg-dark: #666666;
+    --progress-fill: #f1a740;
   }
   [data-theme="light"] {
     background-color: var(--bg-light);
@@ -21,30 +25,71 @@
     background-color: var(--bg-dark);
     color: var(--text-dark);
   }
-  body {
-    font-family: 'Google Sans', sans-serif;
+  html, body {
+    height: 100%;
     margin: 0;
-    height: 100vh;
+    font-family: 'Google Sans', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    transition: background-color 1.5s ease, color 1.5s ease;
+    transition: background-color 1s ease, color 1s ease;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body {
+    padding: 0 1rem;
+    overflow: hidden;
   }
   .logo {
     width: 140px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+    transition: opacity 1s ease, transform 1s ease;
+    position: relative;
+    z-index: 10;
   }
   h1 {
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-size: clamp(1.0rem, 5vw, 2.0rem);
     margin: 0 0 20px 0;
+    transition: opacity 1s ease, transform 1s ease;
+    position: relative;
+    z-index: 10;
   }
-  #countdown {
+  #timeRemaining {
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 10;
+  }
+  #progressContainer {
+    width: 300px;
+    height: 20px;
+    background: var(--progress-bg-light);
+    border-radius: 12.5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    transition: background-color 1s ease;
+    position: relative;
+    z-index: 10;
+  }
+  [data-theme="dark"] #progressContainer {
+    background: var(--progress-bg-dark);
+  }
+  #progressBar {
+    height: 100%;
+    width: 100%;
+    background: var(--progress-fill);
+    transition: width 0.2s linear;
+  }
+  #secondsRemaining {
     font-weight: 700;
-    font-size: clamp(1.8rem, 6vw, 3rem);
-    letter-spacing: 1px;
+    font-size: 1.2rem;
+    user-select: none;
     margin-bottom: 30px;
+    position: relative;
+    z-index: 10;
   }
   .footer {
     position: fixed;
@@ -54,6 +99,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
+    z-index: 10;
   }
   .link {
     font-weight: 700;
@@ -65,12 +111,10 @@
   .link:hover {
     text-decoration: underline;
   }
-
-  /* Tek buton tema geçiş */
   .theme-toggle-button {
     cursor: pointer;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     background: transparent;
     border: none;
     padding: 0;
@@ -78,27 +122,121 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: var(--sun-color);
+  }
+  .theme-toggle-button:hover {
+    transform: scale(1.15);
+    color: var(--moon-color);
   }
   svg {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     stroke-width: 1.8;
     stroke: currentColor;
     fill: none;
-    transition: stroke 1.5s ease, fill 1.5s ease;
+    transition: stroke 1s ease, fill 1s ease;
   }
-  /* Güneş rengi */
-  [data-theme="light"] svg {
-    color: #f39c12;
+  #sunIcon circle {
+    fill: var(--sun-color);
   }
-  /* Ay rengi, stroke ve fill eşit */
-  [data-theme="dark"] svg {
-    color: #f1c40f;
-    fill: #f1c40f;
+  #sunIcon g line {
+    stroke: var(--sun-color);
+    transform-origin: center;
+    animation: spin 10s linear infinite;
+  }
+  #moonIcon {
+    stroke: var(--moon-color);
+    fill: var(--moon-color);
+    filter: drop-shadow(0 0 3px var(--moon-color));
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+  @keyframes glow {
+    0% { filter: drop-shadow(0 0 2px var(--moon-color)); }
+    100% { filter: drop-shadow(0 0 7px var(--moon-color)); }
+  }
+
+  /* Yıldızlar container */
+  #stars {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  /* Yıldızlar için ortak stil */
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation-name: twinkleMove;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  /* Açık tema için siyah yıldız */
+  [data-theme="light"] .star {
+    background-color: black;
+    opacity: 0.15;
+  }
+
+  /* Karanlık tema için beyaz yıldız */
+  [data-theme="dark"] .star {
+    background-color: white;
+    opacity: 0.7;
+  }
+
+  /* Yıldız animasyonu: hafif yer değiştirme + yanıp sönme */
+  @keyframes twinkleMove {
+    0%   { transform: translate(0, 0); opacity: 0.8; }
+    50%  { transform: translate(2px, 2px); opacity: 0.3; }
+    100% { transform: translate(0, 0); opacity: 0.8; }
+  }
+
+  @media (max-width: 480px) {
+    .logo {
+      width: 110px;
+      margin-bottom: 35px;
+    }
+    h1 {
+      font-size: clamp(1.2rem, 7vw, 2rem);
+    }
+    #progressContainer {
+      width: 240px;
+      height: 20px;
+      margin-bottom: 6px;
+    }
+    #secondsRemaining {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    #timeRemaining {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    .theme-toggle-button {
+      width: 45px;
+      height: 45px;
+    }
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+    .footer {
+      bottom: 10px;
+      right: 10px;
+    }
   }
 </style>
 </head>
 <body>
+  <div id="stars"></div>
+
   <img
     id="logo"
     class="logo"
@@ -106,12 +244,18 @@
     alt="Xiaomi Logo"
   />
   <h1>Mi 11 Ultra Bootloader Unlock</h1>
-  <div id="countdown">Yükleniyor...</div>
+
+  <div id="timeRemaining" aria-live="polite">Kalan süre: --</div>
+  <div id="progressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60" aria-label="Bootloader unlock countdown progress">
+    <div id="progressBar"></div>
+  </div>
+  <div id="secondsRemaining">60 saniye</div>
+
   <div class="footer">
     <button class="theme-toggle-button" aria-label="Toggle light/dark theme" id="themeToggleBtn" title="Tema değiştir">
       <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="5" fill="#f39c12"/>
-        <g stroke="#f39c12" stroke-linecap="round">
+        <circle cx="12" cy="12" r="5" />
+        <g stroke-linecap="round">
           <line x1="12" y1="1" x2="12" y2="3"/>
           <line x1="12" y1="21" x2="12" y2="23"/>
           <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
@@ -128,37 +272,66 @@
     </button>
     <a class="link" href="https://t.me/jahnemec" target="_blank" rel="noopener noreferrer">@jahnemec</a>
   </div>
-  <script>
-    const countdownEl = document.getElementById('countdown');
-    const targetDate = new Date('2025-06-04T23:00:00').getTime();
-    const html = document.documentElement;
-    const logo = document.getElementById('logo');
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    const sunIcon = document.getElementById('sunIcon');
-    const moonIcon = document.getElementById('moonIcon');
 
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
+<script>
+  const progressBar = document.getElementById('progressBar');
+  const progressContainer = document.getElementById('progressContainer');
+  const secondsRemainingEl = document.getElementById('secondsRemaining');
+  const timeRemainingEl = document.getElementById('timeRemaining');
+  const html = document.documentElement;
+  const logo = document.getElementById('logo');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+  const h1 = document.querySelector('h1');
+  const starsContainer = document.getElementById('stars');
 
-      if (distance <= 0) {
-        countdownEl.textContent = 'Zaman geldi!';
-        clearInterval(interval);
-        return;
-      }
+  const targetDate = new Date();
+  targetDate.setFullYear(2025, 5, 4); // 5 = Haziran
+  targetDate.setHours(23, 0, 0, 0);
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  function msToDHMS(ms) {
+    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return { days, hours, minutes, seconds };
+  }
 
-      countdownEl.textContent = `${days}g ${hours}sa ${minutes}dk ${seconds}sn`;
+  function updateProgressBar(secondInMinute) {
+    const reversePercent = (secondInMinute / 60) * 100;
+    progressBar.style.width = reversePercent + '%';
+    progressContainer.setAttribute('aria-valuenow', secondInMinute);
+    secondsRemainingEl.textContent = secondInMinute + ' saniye';
+  }
+
+  function update() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      timeRemainingEl.textContent = 'Süre doldu!';
+      progressBar.style.width = '0%';
+      secondsRemainingEl.textContent = '0 saniye';
+      return;
     }
 
-    let interval = setInterval(updateCountdown, 1000);
-    updateCountdown();
+    const { days, hours, minutes, seconds } = msToDHMS(diff);
+    timeRemainingEl.textContent = `Kalan süre: ${days} gün ${hours} saat ${minutes} dakika`;
 
-    function setTheme(theme) {
+    updateProgressBar(seconds);
+
+    requestAnimationFrame(update);
+  }
+
+  function setTheme(theme) {
+    logo.style.opacity = '0';
+    logo.style.transform = 'scale(0.95)';
+    h1.style.opacity = '0';
+    h1.style.transform = 'scale(0.95)';
+
+    setTimeout(() => {
       html.setAttribute('data-theme', theme);
       if (theme === 'dark') {
         logo.src = 'https://i.imgur.com/0JCyOT5.png';
@@ -169,21 +342,37 @@
         sunIcon.style.display = 'inline';
         moonIcon.style.display = 'none';
       }
-    }
+      logo.style.opacity = '1';
+      logo.style.transform = 'scale(1)';
+      h1.style.opacity = '1';
+      h1.style.transform = 'scale(1)';
+    }, 350);
+  }
 
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      setTheme('light');
-    }
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+  });
 
-    themeToggleBtn.addEventListener('click', () => {
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      setTheme(newTheme);
-      localStorage.setItem('theme', newTheme);
-    });
-  </script>
+  // Yıldız oluşturma
+  function createStars(count) {
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2 + 1; // 1-3px arası boyut
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.animationDuration = (Math.random() * 4 + 3) + 's';
+      star.style.animationDelay = (Math.random() * 5) + 's';
+      starsContainer.appendChild(star);
+    }
+  }
+
+  createStars(100);
+  update();
+</script>
 </body>
 </html>
