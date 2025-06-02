@@ -43,7 +43,7 @@
     overflow: hidden;
   }
   .logo {
-    width: 140px;
+    width: 200px;
     margin-bottom: 20px;
     transition: opacity 1s ease, transform 1s ease;
     position: relative;
@@ -103,7 +103,7 @@
   }
   .link {
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: inherit;
     text-decoration: none;
     transition: color 0.3s;
@@ -113,8 +113,8 @@
   }
   .theme-toggle-button {
     cursor: pointer;
-    width: 55px;
-    height: 55px;
+    width: 80px;
+    height: 35px;
     background: transparent;
     border: none;
     padding: 0;
@@ -365,13 +365,13 @@
       star.style.height = size + 'px';
       star.style.top = Math.random() * 100 + 'vh';
       star.style.left = Math.random() * 100 + 'vw';
-      star.style.animationDuration = (Math.random() * 4 + 3) + 's';
-      star.style.animationDelay = (Math.random() * 5) + 's';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      star.style.animationDelay = (Math.random() * 4) + 's';
       starsContainer.appendChild(star);
     }
   }
 
-  createStars(100);
+  createStars(300);
   update();
 </script>
 </body>
