@@ -1,341 +1,164 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="light">
+<html lang="tr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mi 11 Ultra Bootloader Unlock</title>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --bg-light: #fff;
-    --text-light: #000;
-    --bg-dark: #000;
-    --text-dark: #fff;
-    --sun-color: #f1a740;
-    --moon-color: #f1c40f;
-    --progress-bg-light: #666666;
-    --progress-bg-dark: #666666;
-    --progress-fill: #f1a740;
-  }
-  [data-theme="light"] {
-    background-color: var(--bg-light);
-    color: var(--text-light);
-  }
-  [data-theme="dark"] {
-    background-color: var(--bg-dark);
-    color: var(--text-dark);
-  }
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Google Sans', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    transition: background-color 1s ease, color 1s ease;
-    overflow-x: hidden;
-    position: relative;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  body {
-    padding: 0 1rem;
-  }
-  .logo {
-    width: 200px;
-    margin-bottom: 20px;
-    transition: opacity 1s ease, transform 1s ease;
-    position: relative;
-    z-index: 10;
-    max-width: 100%;
-  }
-  h1 {
-    font-size: clamp(1.0rem, 5vw, 2.0rem);
-    margin: 0 0 20px 0;
-    transition: opacity 1s ease, transform 1s ease;
-    position: relative;
-    z-index: 10;
-    max-width: 100%;
-  }
-  #timeRemaining,
-  #secondsRemaining {
-    font-weight: 600;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 10;
-    max-width: 100%;
-  }
-  #progressContainer {
-    width: 300px;
-    height: 20px;
-    background: var(--progress-bg-light);
-    border-radius: 12.5px;
-    overflow: hidden;
-    margin-bottom: 8px;
-    transition: background-color 1s ease;
-    position: relative;
-    z-index: 10;
-    max-width: 100%;
-  }
-  [data-theme="dark"] #progressContainer {
-    background: var(--progress-bg-dark);
-  }
-  #progressBar {
-    height: 100%;
-    width: 100%;
-    background: var(--progress-fill);
-    transition: width 0.2s linear;
-  }
-  .footer {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-    z-index: 10;
-  }
-  .link {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .link:hover {
-    text-decoration: underline;
-  }
-  .theme-toggle-button {
-    cursor: pointer;
-    width: 90px;
-    height: 35px;
-    background: transparent;
-    border: none;
-    padding: 10px;
-    touch-action: manipulation;
-    outline: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease, color 0.3s ease;
-    color: var(--sun-color);
-  }
-  .theme-toggle-button:hover {
-    transform: scale(1.15);
-    color: var(--moon-color);
-  }
-  svg {
-    width: 32px;
-    height: 32px;
-    stroke-width: 1.8;
-    stroke: currentColor;
-    fill: none;
-    transition: stroke 1s ease, fill 1s ease;
-  }
-  #sunIcon circle {
-    fill: var(--sun-color);
-  }
-  #sunIcon g line {
-    stroke: var(--sun-color);
-    transform-origin: center;
-    animation: spin 10s linear infinite;
-  }
-  #moonIcon {
-    stroke: var(--moon-color);
-    fill: var(--moon-color);
-    filter: drop-shadow(0 0 3px var(--moon-color));
-    animation: glow 3s ease-in-out infinite alternate;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg);}
-    100% { transform: rotate(360deg);}
-  }
-  @keyframes glow {
-    0% { filter: drop-shadow(0 0 2px var(--moon-color)); }
-    100% { filter: drop-shadow(0 0 7px var(--moon-color)); }
-  }
-  #stars {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 1;
-  }
-  .star {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation-name: twinkleMove;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-  }
-  [data-theme="light"] .star {
-    background-color: black;
-    opacity: 0.15;
-  }
-  [data-theme="dark"] .star {
-    background-color: white;
-    opacity: 0.7;
-  }
-  @keyframes twinkleMove {
-    0%   { transform: translate(0, 0); opacity: 0.8; }
-    50%  { transform: translate(2px, 2px); opacity: 0.3; }
-    100% { transform: translate(0, 0); opacity: 0.8; }
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xiaomi 12 Bootloader Kilidi</title>
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f4f7;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --accent-color: #ff6700;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --toggle-btn-bg: #2c3e50;
+            --toggle-btn-text: #ffffff;
+        }
 
-  /* Mevcut küçük ekran düzeni */
-  @media (max-width: 480px) {
-    .logo { width: 110px; margin-bottom: 35px; }
-    h1 { font-size: clamp(1.2rem, 7vw, 2rem); }
-    #progressContainer { width: 240px; margin-bottom: 6px; }
-    #secondsRemaining, #timeRemaining { font-size: 1rem; }
-    .theme-toggle-button { width: 90px; height: 45px; }
-    svg { width: 24px; height: 24px; }
-    .footer { bottom: 10px; }
-  }
+        [data-theme="dark"] {
+            --bg-color: #121214;
+            --text-color: #f4f4f7;
+            --card-bg: #1e1e24;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --toggle-btn-bg: #ffffff;
+            --toggle-btn-text: #121214;
+        }
 
-  /* Yeni eklenen orta boy ekranlar */
-  @media (max-width: 768px) {
-    .logo { width: 130px; }
-    h1 { font-size: clamp(1.1rem, 6vw, 1.8rem); }
-    #progressContainer { width: 220px; }
-    .footer { bottom: 10px; gap: 0px; }
-  }
-</style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Mi Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .content-wrapper {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            position: relative;
+        }
+
+        .phone-image {
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 20px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--toggle-btn-bg);
+            color: var(--toggle-btn-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            /* Animasyonlar kaldırıldı */
+        }
+
+        h1 { margin-bottom: 25px; line-height: 1.2; text-align: center; }
+        .main-title { display: block; font-size: 2.2rem; font-weight: 800; color: var(--text-color); }
+        .sub-title { display: block; font-size: 1.4rem; font-weight: 500; opacity: 0.7; margin-top: 5px; }
+        
+        .countdown-wrapper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px;}
+        .countdown-box { background: rgba(255, 103, 0, 0.05); border: 1px solid rgba(255, 103, 0, 0.1); padding: 15px 5px; border-radius: 16px; }
+        .number { font-size: 1.8rem; font-weight: 800; color: var(--accent-color); display: block; }
+        .label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.7; display: block; margin-top: 5px; }
+
+        @media (max-width: 480px) { .countdown-wrapper { grid-template-columns: repeat(2, 1fr); } }
+    </style>
 </head>
 <body>
-  <div id="stars"></div>
-  <img id="logo" class="logo" src="https://i.imgur.com/6OoYS9G.png" alt="Xiaomi Logo" />
-  <h1>Mi 11 Ultra Bootloader Unlock</h1>
-  <div id="timeRemaining" aria-live="polite">Kalan süre: --</div>
-  <div id="progressContainer" role="progressbar" aria-valuemin="0" aria-valuemax="60" aria-valuenow="60" aria-label="Bootloader unlock countdown progress">
-    <div id="progressBar"></div>
-  </div>
-  <div id="secondsRemaining">60 saniye</div>
-  <div class="footer">
-    <button class="theme-toggle-button" aria-label="Toggle light/dark theme" id="themeToggleBtn" title="Tema değiştir">
-      <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="5" />
-        <g stroke-linecap="round">
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </g>
-      </svg>
-      <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" style="display:none;">
-        <path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z"/>
-      </svg>
-    </button>
-    <a class="link" href="https://t.me/jahnemec" target="_blank" rel="noopener noreferrer">@jahnemec</a>
-  </div>
-<script>
-  const progressBar = document.getElementById('progressBar');
-  const progressContainer = document.getElementById('progressContainer');
-  const secondsRemainingEl = document.getElementById('secondsRemaining');
-  const timeRemainingEl = document.getElementById('timeRemaining');
-  const html = document.documentElement;
-  const logo = document.getElementById('logo');
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  const sunIcon = document.getElementById('sunIcon');
-  const moonIcon = document.getElementById('moonIcon');
-  const h1 = document.querySelector('h1');
-  const starsContainer = document.getElementById('stars');
 
-  const targetDate = new Date();
-  targetDate.setFullYear(2025, 5, 4); // 5 = Haziran
-  targetDate.setHours(24, 0, 0, 0);
+    <div class="content-wrapper">
+        <button class="theme-toggle" id="themeToggle">
+            <span class="material-icons" id="themeIcon">dark_mode</span>
+        </button>
 
-  function msToDHMS(ms) {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return { days, hours, minutes, seconds };
-  }
+        <h1>
+            <span class="main-title">Xiaomi 12</span>
+            <span class="sub-title">Bootloader Kilidi</span>
+        </h1>
+        <img src="https://i01.appmifile.com/webfile/globalimg/products/responsive/xiaomi-12/pc-specs-image.png" alt="Xiaomi 12" class="phone-image">
+        
+        <div class="countdown-wrapper">
+            <div class="countdown-box"><span class="number" id="days">00</span><span class="label">Gün</span></div>
+            <div class="countdown-box"><span class="number" id="hours">00</span><span class="label">Saat</span></div>
+            <div class="countdown-box"><span class="number" id="minutes">00</span><span class="label">Dakika</span></div>
+            <div class="countdown-box"><span class="number" id="seconds">00</span><span class="label">Saniye</span></div>
+        </div>
+    </div>
 
-  function updateProgressBar(secondInMinute) {
-    const reversePercent = (secondInMinute / 60) * 100;
-    progressBar.style.width = reversePercent + '%';
-    progressContainer.setAttribute('aria-valuenow', secondInMinute);
-    secondsRemainingEl.textContent = secondInMinute + ' saniye';
-  }
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = 'light_mode';
+            } else {
+                document.body.removeAttribute('data-theme');
+                themeIcon.textContent = 'dark_mode';
+            }
+            localStorage.setItem('theme', theme);
+        }
 
-  function update() {
-    const now = new Date();
-    const diff = targetDate - now;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
 
-    if (diff <= 0) {
-      timeRemainingEl.textContent = 'Süre doldu!';
-      progressBar.style.width = '0%';
-      secondsRemainingEl.textContent = '0 saniye';
-      return;
-    }
+        themeToggle.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(current);
+        });
 
-    const { days, hours, minutes, seconds } = msToDHMS(diff);
-    timeRemainingEl.textContent = `Kalan süre: ${days} gün ${hours} saat ${minutes} dakika`;
+        function getNextSunday() {
+            const now = new Date();
+            const date = new Date();
+            date.setDate(now.getDate() + (7 - now.getDay()) % 7);
+            date.setHours(0, 0, 0, 0);
+            if (date <= now) date.setDate(date.getDate() + 7);
+            return date.getTime();
+        }
 
-    updateProgressBar(seconds);
+        let target = getNextSunday();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const dist = target - now;
+            if (dist < 0) { target = getNextSunday(); return; }
 
-    requestAnimationFrame(update);
-  }
-
-  function setTheme(theme) {
-    logo.style.opacity = '0';
-    logo.style.transform = 'scale(0.95)';
-    h1.style.opacity = '0';
-    h1.style.transform = 'scale(0.95)';
-
-    setTimeout(() => {
-      html.setAttribute('data-theme', theme);
-      if (theme === 'dark') {
-        logo.src = 'https://i.imgur.com/0JCyOT5.png';
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'inline';
-      } else {
-        logo.src = 'https://i.imgur.com/6OoYS9G.png';
-        sunIcon.style.display = 'inline';
-        moonIcon.style.display = 'none';
-      }
-      logo.style.opacity = '1';
-      logo.style.transform = 'scale(1)';
-      h1.style.opacity = '1';
-      h1.style.transform = 'scale(1)';
-    }, 350);
-  }
-
-  themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  });
-
-  function createStars(count) {
-    for (let i = 0; i < count; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      const size = Math.random() * 2 + 1;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
-      star.style.top = Math.random() * 100 + 'vh';
-      star.style.left = Math.random() * 100 + 'vw';
-      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      star.style.animationDelay = (Math.random() * 4) + 's';
-      starsContainer.appendChild(star);
-    }
-  }
-
-  createStars(300);
-  update();
-</script>
+            document.getElementById("days").textContent = Math.floor(dist / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("hours").textContent = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").textContent = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").textContent = Math.floor((dist % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+    </script>
 </body>
 </html>
